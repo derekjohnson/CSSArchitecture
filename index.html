@@ -372,11 +372,11 @@ header a {
 
 				<h3>Keep ID selectors out of CSS</h3>
 
-				<p>It's an old argument now and if you want to revisit the flame war it's out there somewhere. Basically specificity becomes an immortal enemy that feeds off itself and turns into a monster, selectors get longer and more ridiculous, and you may end up selling your soul to <code>!important</code>, which was specified in the deepest circle of hell by Beelzebub himself.</p>
+				<p>It's an old argument now and if you want to revisit the flame war it's out there somewhere. Basically specificity becomes an immortal enemy that feeds off itself and turns into a monster, selectors get longer and more ridiculous, and you may end up selling your soul to <code>!important</code>, which was specified in the deepest circle of hell by Beelzebub himself.<a href="#note-1"><sup>1</sup></a></p>
 
 				<h3>Surely this is classitis?</h3>
 
-				<p>And? If it's HTML file size you're worried about the gains in CSS more than make up for it. Nicole Sullivan reduced Facebook's CSS by massive amounts with very little being added to the HTML.</p>
+				<p>Yes, it is. If it's HTML file size you're worried about the gains in CSS more than make up for it. Nicole Sullivan reduced Facebook's CSS by massive amounts with very little being added to the HTML.</p>
 
 				<p>IDs are faster yes, but by about 1 millisecond per 1,000 selectors, so don't fret about it. Using an ID at the start of a selector like <code>#sidebar ul</code> is actually slowers than using a class, but again not by much - 13 milliseconds.</p>
 
@@ -430,5 +430,9 @@ header a {
 				<li><a href="http://24ways.org/2012/a-harder-working-class/">A Harder-Working Class</a> by <a href="https://twitter.com/nathan_ford">Nathan Ford</a></li>
 			</ul>
 		</aside>
+
+		<footer class="page-footer l-wrapper" role="contentinfo">
+			<p id="note-1">1. Not exactly true. It can be useful in some situations e.g. emails, print styles.</p>
+		</footer>
 	</body>
 </html>
