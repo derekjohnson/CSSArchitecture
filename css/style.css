@@ -60,6 +60,15 @@
 	display: inline-block;
 }
 
+/* Tables */
+.table {
+	width: 100%;
+}
+
+.table-head {
+	text-align: left;
+}
+
 /* Footer */
 .page-footer {
 	border-top: 1px solid #d9d9d9;

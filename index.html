@@ -292,13 +292,13 @@ header a {
 			<section>
 				<h2>State rules</h2>
 
-				<p class="placeholder">Content goes here.</p>
+				<p>Sometimes styles need to be applied to elements depending on whether they are open, closed, hover, active etc. These state rules can be defined by using <code>is-</code>, for example </code>is-open</code></p>
 			</section>
 
 			<section>
 				<h2>JavaScript hooks</h2>
 
-				<p class="placeholder">Content goes here.</p>
+				<p>If you need to add classes for JavaScript to work on use <code>js-</code> prefix so that we know the classes are not being used as style hooks. An example would be a set of tabs that act as toggles for content, and each could be given the class <code>js-toggler</code>.</p>
 			</section>
 
 			<section>
@@ -316,8 +316,8 @@ header a {
 
 				<p>What I propose is we adopt the naming convention used by Philip Walton in his article. It works well and leaves no room for ambiguity.</p>
 
-				<table>
-					<thead>
+				<table class="table">
+					<thead class="table-head">
 						<tr>
 							<th>Selector style</th>
 							<th>Selector type</th>
@@ -348,6 +348,18 @@ header a {
 							<td>Lowercase l and a dash</td>
 							<td>Layout rules</td>
 							<td><code>.l-sidebar</code> or <code>.l-gallery</code></td>
+						</tr>
+
+						<tr>
+							<td>Lowercase js and a dash</td>
+							<td>JavaScript hooks</td>
+							<td><code>js-toggler</code> or <code>querySelectorAll('js-toggler')</code></td>
+						</tr>
+
+						<tr>
+							<td>Lowercase is and a dash</td>
+							<td>State rules</td>
+							<td><code>.is-open</code> or <code>el.classList.add('is-open')</code></td>
 						</tr>
 					</tbody>
 				</table>
