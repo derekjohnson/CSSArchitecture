@@ -1,0 +1,70 @@
+@import url(normalize.css);
+
+/* LAYOUT */
+.l-wrapper {
+	margin: 0 2.5%;
+}
+
+.l-header {
+	margin-bottom: 1em;
+}
+
+.l-logo {
+	display: block;
+}
+
+/* MODULES */
+/* header */
+.header {
+	color: #66d9ef;
+	background: #272822;
+	padding: 0.5em 2.5%;
+}
+
+.header__logo {
+	font-family: Arial, sans-serif;
+	font-size: 10em;
+	text-align: center;
+}
+
+.header__title {
+	text-align: center;
+}
+
+.header__body {
+	color: #a6e22e;
+}
+
+/* Figures */
+.figure {
+	margin-bottom: 1em;
+}
+
+.figure--image {
+	text-align: center;
+}
+
+.figure__caption {
+	font-style: italic;
+	font-size: 0.875em;
+}
+
+/* Code */
+.code {
+	text-align: center;
+	padding: 0 1em;
+}
+
+.code__snippet {
+	text-align: left;
+	display: inline-block;
+}
+
+
+/**/
+.placeholder {
+	color: #933;
+	background: palegoldenrod;
+	border: 1px solid hotpink;
+	font-weight: bold;
+}

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<title></title>
+		<meta name="description" content="A workshop for the web developer team at Pierce Communications on writing CSS as part of a team.">
+		<meta name="viewport" content="width=device-width">
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:400,700|PT+Serif:400,700">
+		<link rel="stylesheet" href="css/style.css">
+	</head>
+
+	<body>
+		<header role="banner" class="header l-header">
+			<span role="presentational" class="header__logo l-logo">{}</span>
+			<h1 class="header__title">Some ideas to help us reach consensus on <abbr title="Cascading Style Sheets">CSS</abbr> architecture and style</h1>
+
+			<p class="header__body">This is for the web dev team at Pierce Communications in Belfast and its purpose is to propose a method for writing CSS that allows us to work together better and faster. It is not a prescription or a "do it my way" instruction.</p>
+
+			<p class="header__body">It borrows heavily from ideas I've been studying by Nicole Sullivan, Harry Roberts, Jonathan Snook, Nicholas Gallagher and Philip Walton. Links at the end and throughout.</p>
+		</header>
+
+		<div role="main" class="l-wrapper">
+			<section>
+				<h2>What we hope to achieve</h2>
+
+				<p>Any dev on the team will be able to:</p>
+
+				<ul>
+					<li>Jump into existing CSS and quickly understand what's going on</li>
+
+					<li>Add new components to the page without having to change exisiting CSS</li>
+
+					<li>Add new CSS without affecting existing components</li>
+
+					<li>Build large-scale frequently changing flexible websites without resorting to tag-it-on.</li>
+				</ul>
+			</section>
+
+			<section>
+				<h2>CSS Anatomy</h2>
+
+				<p>Just a wee refresher so you know what I'm talking about later, consider the following CSS snippet:</p>
+
+				<figure class="figure">
+					<pre class="code">
+<code class="code__snippet">
+body #main article p {
+	color: #000;
+	background: #fff;
+	padding: 0;
+	margin: 0 0 1em;
+}
+</code>
+					</pre>
+				</figure>
+
+				<p><code>body #main article p</code> part is a selector.</p>
+
+				<p>The part inside and including the curly braces is a declaration block.</p>
+
+				<p><code>padding: 0</code> is a declaration.</p>
+
+				<p>A declaration is made up of a property name, followed by a colon, followed by a property value.</p>
+
+				<p>The whole thing is a rule or rule set, either is fine.</p>
+			</section>
+
+			<section>
+				<h2>Some useful pointers</h2>
+
+				<h3>Keep selectors short</h3>
+
+				<p>For example, <code>#sidebar div ul li a</code> is quite long. If another component wants to share the styles but it's not in <code>#sidebar</code> a new (long) selector will need to be created.</p>
+
+				<figure class="figure">
+					<pre class="code">
+<code class="code__snippet">
+#sidebar div ul li a,
+#promo div ul li a {
+	// styles
+}
+</code>
+					</pre>
+				</figure>
+
+				<p>If the structure of the <abbr title="Hypertext Markup Language">HTML</abbr> changes e.g. the <code>div</code> changes to a <code>section</code> this rule will fail and the selector will need to be rebuilt.</p>
+
+				<figure class="figure">
+					<pre class="code">
+<code class="code_snippet">
+#sidebar section ul li a {
+	// styles
+}
+</code>
+					</pre>
+				</figure>
+
+				<p>As we all know CSS is there to separate content from presentation, but selectors like these aren't really doing that. The CSS is still tied quite tightly to the HTML, indeed you probably had a mental image of the HTML just from looking at the CSS.</p>
+
+				<p>As we'll see shortly there isn't a big difference in selector performance between classes and IDs, but long selectors do have more of a hit as the browser has to look up more things. In a large Magento site that needs all the perf help it can get this shouldn't be ignored.</p>
+
+				<h3>Keep element selectors in base style rules</h3>
+
+				<p>My preference is to create a base.css during production, put what I need from normalize.css into it and add base styles particular to the project.</p>
+
+				<p>It's often tempting to write selectors like <code>header a</code> or <code>article p</code>. It doesn't have a particularly high specificity so you might be wondering what the problem is.</p>
+
+				<p>Let's take the first example:</p>
+
+				<figure class="figure">
+					<pre class="code">
+<code class="code__snippet">
+/* Logo styles */
+header a {
+	width: 25%;
+}
+</code>
+					</pre>
+				</figure>
+
+				<p>A couple of days later you're working on the news section and the headlines of news items are 25% of the width of the item, so you apply an overwrite, maybe something like:</p>
+
+				<figure class="figure">
+					<pre class="code">
+<code class="code_snippet">
+#news header a {
+	width: 100%;
+}
+</code>
+					</pre>
+				</figure>
+
+				<p>And you're heading back towards long selectors that may themselves cause further problems.</p>
+
+				<h3>Give rules one job to do well</h3>
+
+				<p>Separation of concerns should happen inside CSS as well. A rule that does too much will result in components that can't be moved easily. Take the following example:</p>
+
+				<figure class="figure">
+					<pre class="code">
+<code class="code__snippet">
+.promo {
+	color: #339;
+	background: #afafaf;
+	font-size: 1.25em;
+	text-align: center;
+	float: right;
+	padding: 0.5em 1em;
+	margin: 0 0 0 7.5%;
+}
+</code>
+					</pre>
+				</figure>
+
+				<p>Because the positioning is defined in the declaration block we can't easily move this component elsewhere on the page. There are a few ways to get round it but none of them are altogether tidy.</p>
+			</section>
+
+			<section>
+				<h2>A practical example</h2>
+
+				<p>I had about a million tabs open and clicked one at random. It was CSS Tricks and the first thing that caught my eye was the treehouse add in the sidebar, so I screengrabbed it for an example.</p>
+
+				<figure class="figure figure--image">
+					<img src="img/treehouse-ad.png" alt="Treehouse. Learn web design, coding, mobile app development & more. Start learning.">
+
+					<figcaption class="figure__caption">A screenshot of a treehouse ad on CSS Tricks</figcaption>
+				</figure>
+
+				<p>I haven't inspected Chris's code so I don't know how he marked it up, but it could be something like:</p>
+
+				<figure class="figure">
+					<pre class="code">
+<code class="code__snippet">
+&lt;a class="treehouse" href="https://teamtreehouse.com/"&gt;
+	&lt;h2&gt;treehouse&lt;/h2&gt;
+
+	&lt;p&gt;Learn web design, coding, mobile app development &amp; more.&lt;/p&gt;
+
+	&lt;p&gt;Start Learning &rarr;&lt;/p&gt;
+&lt;/a&gt;
+</code>
+					</pre>
+				</figure>
+
+				<p>We have already seen how selectors like <code>.treehouse h2</code> can cause problems so we'll add classes to the HTML and use them as CSS selectors.</p>
+
+				<figure class="figure">
+					<pre class="code">
+<code class="code__snippet">
+&lt;a class="treehouse" href="https://teamtreehouse.com/"&gt;
+	&lt;h2 class="title"&gt;treehouse&lt;/h2&gt;
+
+	&lt;p&gt;Learn web design, coding, mobile app development &amp; more.&lt;/p&gt;
+
+	&lt;p class="call-to-action"&gt;Start Learning &rarr;&lt;/p&gt;
+&lt;/a&gt;
+</code>
+					</pre>
+				</figure>
+
+				<figure class="figure">
+					<pre class="code">
+<code class="code__snippet">
+.treehouse {
+	color: #000;
+	background: green;
+	font-size: 1em;
+	text-align: center;
+	padding: 7em 2em;
+}
+
+.treehouse .title {
+	color: #fff;
+	font-family: 'Webfont Rounded', sans-serif;
+	font-weight: bold;
+	font-size: 2.25em;
+}
+
+.treehouse .call-to-action {
+	color: #fff;
+	font-size: 2em;
+}
+</code>
+					</pre>
+				</figure>
+
+				<p>It's better, but we can go further. Using the CSS above, any other use of <code>.title</code> will have an effect on this component, so if a dev isn't aware of this module and creates a <code>.title</code> selector (as they have every right to do BTW) for something else, it will affect our ad. The same principle applies to the <code>.call-to-action</code> selector.</p>
+
+				<p>Another common occurence of this problem is when a <code>.last</code> class is added to a menu item and every nth box in a grid.</p>
+
+				<p>To avoid this potential problem we can namespace the classes like so:</p>
+
+				<figure class="figure">
+					<pre class="code">
+<code class="code__snippet">
+&lt;a class="treehouse" href="https://teamtreehouse.com/"&gt;
+	&lt;h2 class="treehouse-title"&gt;treehouse&lt;/h2&gt;
+
+	&lt;p&gt;Learn web design, coding, mobile app development &amp; more.&lt;/p&gt;
+
+	&lt;p class="treehouse-call-to-action"&gt;Start Learning &rarr;&lt;/p&gt;
+&lt;/a&gt;
+</code>
+					</pre>
+				</figure>
+
+				<figure class="figure">
+					<pre class="code">
+<code class="code__snippet">
+.treehouse-title {
+	color: #fff;
+	font-family: 'Webfont Rounded', sans-serif;
+	font-weight: bold;
+	font-size: 2.25em;
+}
+
+.treehouse-call-to-action {
+	color: #fff;
+	font-size: 2em;
+}
+</code>
+					</pre>
+				</figure>
+
+				<p>Now all are styles are scoped to their component and it would take a lot to go wrong before other components' styles had an effect on this one.</p>
+
+				<p>The next question is what if we want to use the component somewhere else but use a different font and a red background? Again the aim is to avoid using location based selectors and creating long and/or less manageable selectors.</p>
+
+				<p>That means something like <code>.main .treehouse</code> is something we want to avoid, but what we can do is extend or modify the class with something like <code>.treehouse-main</code> so now our CSS looks like:</p>
+
+				<figure class="figure">
+					<pre class="code">
+<code class="code__snippet">
+.treehouse {
+	color: #000;
+	background: green;
+	font-size: 1em;
+	text-align: center;
+	padding: 7em 2em;
+}
+
+.treehouse-main {
+	background: red;
+	font-family: serif;
+}
+</code>
+					</pre>
+				</figure>
+			</section>
+
+			<section>
+				<h2>State rules</h2>
+
+				<p class="placeholder">Content goes here.</p>
+			</section>
+
+			<section>
+				<h2>Naming convention</h2>
+
+				<p>The eagle-eyed among you will have spotted some problems with the selector names I've used in the snippets above.</p>
+
+				<ul>
+					<li>How do we know <code>.treehouse-title</code> is part of the <code>.treehouse</code> component and not a component itself?</li>
+
+					<li>How do we know where the sub-component in <code>.treehouse-call-to-action</code> begins?</li>
+
+					<li>How do we know <code>.treehouse-main</code> is a modifier, not a sub-component or component? If it was called <code>.treehouse-footer</code> it would be even more ambiguous.</li>
+				</ul>
+
+				<p>What I propose is we adopt the naming convention used by Philip Walton in his article. It works well and leaves no room for ambiguity.</p>
+
+				<table>
+					<thead>
+						<tr>
+							<th>Selector style</th>
+							<th>Selector type</th>
+							<th>Example</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr>
+							<td>Name or single dash</td>
+							<td>Component name</td>
+							<td><code>.treehouse</code> or <code>.tree-house</code></td>
+						</tr>
+
+						<tr>
+							<td>Two dashes</td>
+							<td>Component modifier</td>
+							<td><code>.treehouse--main</code> or <code>.treehouse--footer</code></td>
+						</tr>
+
+						<tr>
+							<td>Two underscores</td>
+							<td>Sub-component</td>
+							<td><code>.treehouse__title</code> or <code>.treehouse__call-to-action</code></td>
+						</tr>
+
+						<tr>
+							<td>Lowercase l and a dash</td>
+							<td>Layout rules</td>
+							<td><code>.l-sidebar</code> or <code>.l-gallery</code></td>
+						</tr>
+					</tbody>
+				</table>
+			</section>
+
+			<section>
+				<h2>Preprocessors</h2>
+
+				<p>I'm going to start learning <abbr title="Syntactically Awesome Stylesheets">Sass</abbr> and the team has already been experimenting with LESS. Stylus is another and I think Roman Komarov of Yandex is writing one. There may be more.</p>
+
+				<p>The idea of preprocessors is to write CSS faster, not better. Therefore it follows that if you write bad CSS you will write a lot more of it using a preprocessor.</p>
+
+				<p>Always check the built CSS file to make sure the preprocessor is creating CSS in line with our agreed architecture and style.</p>
+			</section>
+
+			<section>
+				<h2>Miscellaneous</h2>
+
+				<h3>Build components in isolation</h3>
+
+				<p>If you build your components in their own HTML document you'll get a better handle on separating concerns within CSS. Basically leave out position, margin and float and put them into layout rules where necessary.</p>
+
+				<h3>Keep ID selectors out of CSS</h3>
+
+				<p>It's an old argument now and if you want to revisit the flame war it's out there somewhere. Basically specificity becomes an immortal enemy that feeds off itself and turns into a monster, selectors get longer and more ridiculous, and you may end up selling your soul to <code>!important</code>, which was specified in the deepest circle of hell by Beelzebub himself.</p>
+
+				<h3>Surely this is classitis?</h3>
+
+				<p>And? If it's HTML file size you're worried about the gains in CSS more than make up for it. Nicole Sullivan reduced Facebook's CSS by massive amounts with very little being added to the HTML.</p>
+
+				<p>IDs are faster yes, but by about 1 millisecond per 1,000 selectors, so don't fret about it. Using an ID at the start of a selector like <code>#sidebar ul</code> is actually slowers than using a class, but again not by much - 13 milliseconds.</p>
+
+				<p>Putting a class on every <code>&lt;p&gt;</code> might sound like a step too far, but when we're sending this stuff to phones over Edge bytes matter more than made up words that were only made up to make a coding technique sound like a disease.</p>
+
+				<h3>Show whitespace</h3>
+
+				<p>It's one of the recommendations in Nicholas Gallagher's idomatic CSS and you can turn it on in ST2 by putting <code>"draw_white_space": "all"</code> in user prefs.</p>
+
+				<h3>Attribute selectors</h3>
+
+				<p>Consider making better use of them. Nathan Ford's 24 Ways article is an excellent resource. Also very useful for things like removing indicators that they can be clicked from tel: links on wider screens:</p>
+
+				<figure class="figure">
+					<pre class="code">
+<code class="code__snippet">
+@media (min-width:60em) {
+	[href^=tel] {
+		text-decoration: none;
+		cursor: text;
+	}
+}
+</code>
+					</pre>
+				</figure>
+
+				<h3>Kill all top margins</h3>
+
+				<p>I genuinely have no idea how anyone copes with top margins on headings, paragraphs, lists etc. Kill 'em all and watch your CSS enjoyment level go up a notch.</p>
+			</section>
+		</div>
+
+		<aside role="complementary" class="l-wrapper">
+			<h2>Influences, credits and resources</h2>
+
+			<ul>
+				<li><a href="http://engineering.appfolio.com/2012/11/16/css-architecture/">CSS Architecture</a> by Philip Walton</li>
+
+				<li><a href="http://oocss.org/">OOCSS</a> by <a href="https://twitter.com/stubbornella">Nicole Sullivan</a></li>
+
+				<li><a href="http://smacss.com/">SMACSS</a> by <a href="https://twitter.com/snookca">Jonathan Snook</a></li>
+
+				<li><a href="http://oli.jp/2011/ids/">Don't use IDs in CSS selectors?</a> by <a href="https://twitter.com/boblet">Oli Studholme</a></li>
+
+				<li><a href="http://schedule.sxsw.com/2012/events/event_IAP9410">CSS for grown ups: maturing best practises</a> (<a href="http://lanyrd.com/2012/sxsw-interactive/spmqc/">slides</a>) by <a href="https://twitter.com/andyhume">Andy Hume</a></li>
+
+				<li><a href="http://csswizardry.com/2011/09/when-using-ids-can-be-a-pain-in-the-class/">When using IDs can be a pain in the class…</a> by <a href="https://twitter.com/csswizardry">Harry Roberts</a></li>
+
+				<li><a href="https://github.com/necolas/idiomatic-css">Idiomatic CSS</a> by <a href="https://twitter.com/necolas">Nicholas Gallagher</a></li>
+
+				<li><a href="http://24ways.org/2012/a-harder-working-class/">A Harder-Working Class</a> by <a href="https://twitter.com/nathan_ford">Nathan Ford</a></li>
+			</ul>
+		</aside>
+	</body>
+</html>
